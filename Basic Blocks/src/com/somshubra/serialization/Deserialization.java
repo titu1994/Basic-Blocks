@@ -12,7 +12,7 @@ import com.google.gson.reflect.TypeToken;
 public class Deserialization {
 
 	public static void main(String[] args) throws IOException {
-		File input = new File("Entity.txt");
+		File input = new File("test/Entity.txt");
 		
 		ArrayList<Entity> list = null;
 		Gson gson = new Gson();

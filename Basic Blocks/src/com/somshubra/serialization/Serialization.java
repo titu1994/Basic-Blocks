@@ -12,20 +12,21 @@ import com.google.gson.Gson;
 public class Serialization {
 
 	public static void main(String[] args) throws IOException {
-		File output = new File("Entity.txt");
-		
+		File output = new File("test/Entity.txt");
+		output.mkdirs();
 		if(!output.exists())
 			output.createNewFile();
 		else {
 			output.delete();
 			output.createNewFile();
 		}
-		
-		Entity a = new Entity("A", 1);
-		Entity b = new Entity("B", 2);
-		Entity c = new Entity("c", 3);
-		Entity d = new Entity("2", 20);
-		Entity e = new Entity("@", 155);
+		ArrayList<String> x = new ArrayList<>();
+		x.add("X");
+		Entity a = new Entity("A", 1, x);
+		Entity b = new Entity("B", 2, x);
+		Entity c = new Entity("c", 3, x);
+		Entity d = new Entity("2", 20, x);
+		Entity e = new Entity("@", 15, x);
 		
 		ArrayList<Entity> list = new ArrayList<Entity>();
 		list.add(a);
