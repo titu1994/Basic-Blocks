@@ -84,11 +84,27 @@ public class ParallelMergeSort {
 			setSize *= 2;
 			start = 0; 
 			end = start + setSize;
+			boolean reset = false;
 			
 			for(int i = mergeList.size(); i > 1; i = mergeList.size()) {
+				if(reset) {
+					setSize *= 2;
+					start = 0;
+					if(checkLimit(start, setSize, data.length))
+						end = data.length;
+					else
+						end = start + setSize;
+					reset = false;
+				}
 				mergeList.put(executor.submit(createMergeResultArrayCallable(mergeList.remove().get(), start, end)));
 				
-				
+				start = end;
+				if(checkLimit(start, setSize, data.length)) {
+					end = data.length;
+					reset = true;	
+				}
+				else
+					end = start + setSize;
 			}
 			
 		} catch (InterruptedException | ExecutionException e) {
@@ -111,6 +127,15 @@ public class ParallelMergeSort {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	private static boolean checkLimit(int start, int setSize, int dataLength) {
+		if((start + setSize + 1) == dataLength)
+			return true;
+		else if((start + setSize - 1) == dataLength)
+			return true;
+		else
+			return false;
 	}
 
 	private static Callable<int[]> createSubArraySortCallable(int threadNo, int sizePerThread, int data[]) {
