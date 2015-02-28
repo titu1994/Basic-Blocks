@@ -49,7 +49,8 @@ public class ParallelMergeSort {
 		ArrayBlockingQueue<Future<int[]>> mergeList = new ArrayBlockingQueue<Future<int[]>>(splitList.size() / 2);
 
 		try {
-			/*memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+			
+			memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 			System.out.println("Prior to Merge Array : Memory in MB Consumed : " + (memory / (1024 * 1024)));
 			
 			for(int j = 0; j < NO_OF_THREADS; j += 2) {
@@ -62,13 +63,13 @@ public class ParallelMergeSort {
 			for(int i = mergeList.size(); i > 1; i = mergeList.size()) {
 				mergeList.put(executor.submit(createMergedArrayCallable(mergeList.remove().get(), mergeList.remove().get())));
 			}
-			*/
-			memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		
+			/*memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 			System.out.println("Prior to Merge Array : Memory in MB Consumed : " + (memory / (1024 * 1024)));
 			
 			int start, end, setSize = 2 * sizePerThread;
 			for(int j = 0; j < NO_OF_THREADS; j += 2) {
-				start = j * setSize;
+				start = (j/2) * setSize;
 				if(j + 2 == NO_OF_THREADS) {
 					end = data.length;
 				}
@@ -78,6 +79,7 @@ public class ParallelMergeSort {
 				mergeList.put(executor.submit(createMergeResultArrayCallable(data, start, end)));
 			}
 			
+			splitList.clear();
 			splitList = null;
 			System.gc();
 			
@@ -85,10 +87,14 @@ public class ParallelMergeSort {
 			start = 0; 
 			end = start + setSize;
 			boolean reset = false;
+			System.out.println("Outer Set Size : " + setSize);
+			System.out.println("Merge List Size : " + mergeList.size());
 			
-			for(int i = mergeList.size(); i > 1; i = mergeList.size()) {
+			for(int i = mergeList.size(); i > 1 || reset; i = mergeList.size()) {
 				if(reset) {
+					System.out.println("Entered Reset");
 					setSize *= 2;
+					System.out.println("Set Size : " + setSize);
 					start = 0;
 					if(checkLimit(start, setSize, data.length))
 						end = data.length;
@@ -96,16 +102,21 @@ public class ParallelMergeSort {
 						end = start + setSize;
 					reset = false;
 				}
-				mergeList.put(executor.submit(createMergeResultArrayCallable(mergeList.remove().get(), start, end)));
+				
+				mergeList.put(executor.submit(createMergeResultArrayCallable(data, start, end)));
+				mergeList.remove();
+				mergeList.remove();
 				
 				start = end;
 				if(checkLimit(start, setSize, data.length)) {
 					end = data.length;
 					reset = true;	
+					System.out.println("Reset is now set");
 				}
 				else
 					end = start + setSize;
 			}
+			*/
 			
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
@@ -130,10 +141,18 @@ public class ParallelMergeSort {
 	}
 	
 	private static boolean checkLimit(int start, int setSize, int dataLength) {
-		if((start + setSize + 1) == dataLength)
+		if((start + setSize + 1) >= dataLength){
+			System.out.println("Start + Set + 1 : " + (start + setSize + 1));
 			return true;
-		else if((start + setSize - 1) == dataLength)
+		}
+		else if((start + setSize - 1) == dataLength) {
+			System.out.println("Start + Set + 1 : " + ((start + setSize - 1)));
 			return true;
+		}
+		else if((start + setSize) == dataLength) {
+			System.out.println("Start + Set + 1 : " + (start + setSize));
+			return true;
+		}
 		else
 			return false;
 	}
@@ -144,25 +163,29 @@ public class ParallelMergeSort {
 
 			@Override
 			public int[] call() throws Exception {
-				
+				int temp[];
 				int start = 0, end = 0;
 				System.gc();
 				
 				if(threadNo != (NO_OF_THREADS - 1)) {
-					start = sizePerThread * threadNo;
-					end = sizePerThread * (threadNo + 1);
+					temp = Arrays.copyOfRange(data, sizePerThread * threadNo, sizePerThread * (threadNo + 1));
+					//start = sizePerThread * threadNo;
+					//end = sizePerThread * (threadNo + 1);
 				}
 				else {
-					start = sizePerThread * threadNo;
-					end = data.length;
+					temp = Arrays.copyOfRange(data, sizePerThread * threadNo, data.length);
+					//start = sizePerThread * threadNo;
+					//end = data.length;
 				}
 				
 				memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 				System.out.println("Sub Array "+ threadNo + ": Memory in MB Consumed : " + (memory / (1024 * 1024)));
 
-				Arrays.sort(data, start, end);
+				Arrays.sort(temp);
+				//Arrays.sort(data, start, end);
 				
-				return null;
+				//return data;
+				return temp;
 			}
 		};
 
