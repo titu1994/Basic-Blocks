@@ -32,8 +32,8 @@ public class ParallelMergeSortTest {
 		long end = System.currentTimeMillis();
 		
 		//System.out.println("Sorted Data : " + Arrays.toString(data));
-		memory = runtime.totalMemory() - runtime.freeMemory();
-		System.out.println("Memory in MB Consumed : " + (memory / (1024 * 1024)));
+		//memory = runtime.totalMemory() - runtime.freeMemory();
+		//System.out.println("Memory in MB Consumed : " + (memory / (1024 * 1024)));
 		
 		long diff = end - begin;
 		System.out.println("Millitime : " + diff);
@@ -45,14 +45,15 @@ public class ParallelMergeSortTest {
 		}
 		
 		begin = System.currentTimeMillis();
+		//Arrays.parallelSort(data);
 		Arrays.sort(data);
 		end = System.currentTimeMillis();
 		
-		memory = runtime.totalMemory() - runtime.freeMemory();
-		System.out.println("Memory in MB Consumed : " + (memory / (1024 * 1024)));
+		//memory = runtime.totalMemory() - runtime.freeMemory();
+		//System.out.println("Memory in MB Consumed : " + (memory / (1024 * 1024)));
 		
 		diff = end - begin;
-		System.out.println("Millitime : " + diff);
+		System.out.println("Arrays.Sort Millitime : " + diff);
 	}
 
 }

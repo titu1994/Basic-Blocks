@@ -11,8 +11,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class ParallelMergeSort {
-	private static final int NO_OF_THREADS = Runtime.getRuntime().availableProcessors();
+	private static int NO_OF_THREADS = Runtime.getRuntime().availableProcessors();
 	private static ExecutorService executor;
+	private static long memory;
 
 	private ParallelMergeSort() {
 
@@ -25,8 +26,11 @@ public class ParallelMergeSort {
 		}
 
 		int sizePerThread = data.length / NO_OF_THREADS;
-		ArrayList<Future<int[]>> splitList = new ArrayList<Future<int[]>>();
+		ArrayList<Future<int[]>> splitList = new ArrayList<Future<int[]>>(NO_OF_THREADS);
 		executor = Executors.newFixedThreadPool(NO_OF_THREADS);
+		
+		memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		System.out.println("Prior to Start : Memory in MB Consumed : " + (memory / (1024 * 1024)));
 
 		for(int i = 0; i < NO_OF_THREADS; i++) {
 			splitList.add(executor.submit(createSubArraySortCallable(i, sizePerThread, data)));
@@ -45,14 +49,46 @@ public class ParallelMergeSort {
 		ArrayBlockingQueue<Future<int[]>> mergeList = new ArrayBlockingQueue<Future<int[]>>(splitList.size() / 2);
 
 		try {
+			/*memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+			System.out.println("Prior to Merge Array : Memory in MB Consumed : " + (memory / (1024 * 1024)));
+			
 			for(int j = 0; j < NO_OF_THREADS; j += 2) {
 				mergeList.put(executor.submit(createMergedArrayCallable(splitList.remove(0).get(), splitList.remove(0).get())));
 			}
 			
 			splitList = null;
-			
+			System.gc();
+	
 			for(int i = mergeList.size(); i > 1; i = mergeList.size()) {
 				mergeList.put(executor.submit(createMergedArrayCallable(mergeList.remove().get(), mergeList.remove().get())));
+			}
+			*/
+			memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+			System.out.println("Prior to Merge Array : Memory in MB Consumed : " + (memory / (1024 * 1024)));
+			
+			int start, end, setSize = 2 * sizePerThread;
+			for(int j = 0; j < NO_OF_THREADS; j += 2) {
+				start = j * setSize;
+				if(j + 2 == NO_OF_THREADS) {
+					end = data.length;
+				}
+				else {
+					end = start + setSize;
+				}
+				mergeList.put(executor.submit(createMergeResultArrayCallable(data, start, end)));
+			}
+			
+			splitList = null;
+			System.gc();
+			
+			setSize *= 2;
+			start = 0; 
+			end = start + setSize;
+			
+			for(int i = mergeList.size(); i > 1; i = mergeList.size()) {
+				mergeList.put(executor.submit(createMergeResultArrayCallable(mergeList.remove().get(), start, end)));
+				
+				
 			}
 			
 		} catch (InterruptedException | ExecutionException e) {
@@ -68,6 +104,9 @@ public class ParallelMergeSort {
 			
 			mergeList = null;
 			System.gc();
+			
+			memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+			System.out.println("End of Algorithm : Memory in MB Consumed : " + (memory / (1024 * 1024)));
 		} catch (InterruptedException | ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -80,19 +119,25 @@ public class ParallelMergeSort {
 
 			@Override
 			public int[] call() throws Exception {
-				int temp[] = null;
+				
+				int start = 0, end = 0;
 				System.gc();
 				
 				if(threadNo != (NO_OF_THREADS - 1)) {
-					temp = Arrays.copyOfRange(data, sizePerThread * threadNo, sizePerThread * (threadNo + 1));
+					start = sizePerThread * threadNo;
+					end = sizePerThread * (threadNo + 1);
 				}
 				else {
-					temp = Arrays.copyOfRange(data, sizePerThread * threadNo, data.length);
+					start = sizePerThread * threadNo;
+					end = data.length;
 				}
-
-				Arrays.sort(temp);
 				
-				return temp;
+				memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+				System.out.println("Sub Array "+ threadNo + ": Memory in MB Consumed : " + (memory / (1024 * 1024)));
+
+				Arrays.sort(data, start, end);
+				
+				return null;
 			}
 		};
 
@@ -106,10 +151,13 @@ public class ParallelMergeSort {
 			public int[] call() throws Exception {
 				System.gc();
 				
-				int mergeArray[] = new int[a.length + b.length];
 				int aLen = a.length;
 				int bLen = b.length;
-
+				int mergeArray[] = new int[a.length + b.length];
+				
+				memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+				System.out.println("Merge Callable : Memory in MB Consumed : " + (memory / (1024 * 1024)));
+				
 				int aPointe = 0, bPointe = 0, mergePointer = 0;
 
 				while(aLen > 0 || bLen > 0) {
@@ -145,7 +193,6 @@ public class ParallelMergeSort {
 						}
 					}
 				}
-				
 				return mergeArray;
 			}
 		};
@@ -153,54 +200,14 @@ public class ParallelMergeSort {
 		return callable;
 	}
 	
-	private static Callable<int[]> createMergeResultArrayCallable(int a[], int b[]) {
+	private static Callable<int[]> createMergeResultArrayCallable(int data[], int start, int end) {
 
 		Callable<int[]> callable = new Callable<int[]>() {
 			@Override
 			public int[] call() throws Exception {
 				System.gc();
-				
-				int mergeArray[] = new int[a.length + b.length];
-				int aLen = a.length;
-				int bLen = b.length;
-
-				int aPointe = 0, bPointe = 0, mergePointer = 0;
-
-				while(aLen > 0 || bLen > 0) {
-					if(aLen > 0 && bLen > 0) {
-						while(aLen > 0 && bLen > 0) {
-							if(a[aPointe] < b[bPointe]) {
-								mergeArray[mergePointer] = a[aPointe];
-								aPointe++;
-								aLen--;
-							}
-							else {
-								mergeArray[mergePointer] = b[bPointe];
-								bPointe++;
-								bLen--;
-							}
-							mergePointer++;
-						}
-					}
-					else if(aLen > 0) {
-						while(aLen > 0) {
-							mergeArray[mergePointer] = a[aPointe];
-							mergePointer++;
-							aPointe++;
-							aLen--;
-						}
-					}
-					else if(bLen > 0) {
-						while(bLen > 0) {
-							mergeArray[mergePointer] = b[bPointe];
-							mergePointer++;
-							bPointe++;
-							bLen--;
-						}
-					}
-				}
-				
-				return mergeArray;
+				Arrays.sort(data, start, end);
+				return data;
 			}
 		};
 
