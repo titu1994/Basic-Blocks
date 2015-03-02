@@ -28,6 +28,7 @@ public class ParallelMergeSortTest {
 		System.out.println("Memory in MB Consumed : " + (memory / (1024 * 1024)));
 		
 		long begin = System.currentTimeMillis();
+		ParallelMergeSort.setParallelism(4);
 		ParallelMergeSort.sort(data);
 		long end = System.currentTimeMillis();
 		

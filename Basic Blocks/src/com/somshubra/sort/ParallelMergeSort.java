@@ -29,9 +29,10 @@ public class ParallelMergeSort {
 		ArrayList<Future<int[]>> splitList = new ArrayList<Future<int[]>>(NO_OF_THREADS);
 		executor = Executors.newFixedThreadPool(NO_OF_THREADS);
 		
-		memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		/*memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 		System.out.println("Prior to Start : Memory in MB Consumed : " + (memory / (1024 * 1024)));
-
+		*/
+		
 		for(int i = 0; i < NO_OF_THREADS; i++) {
 			splitList.add(executor.submit(createSubArraySortCallable(i, sizePerThread, data)));
 		}
@@ -50,9 +51,9 @@ public class ParallelMergeSort {
 
 		try {
 			
-			memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+			/*memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 			System.out.println("Prior to Merge Array : Memory in MB Consumed : " + (memory / (1024 * 1024)));
-			
+			*/
 			for(int j = 0; j < NO_OF_THREADS; j += 2) {
 				mergeList.put(executor.submit(createMergedArrayCallable(splitList.remove(0).get(), splitList.remove(0).get())));
 			}
@@ -118,7 +119,10 @@ public class ParallelMergeSort {
 			}
 			*/
 			
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -132,9 +136,13 @@ public class ParallelMergeSort {
 			mergeList = null;
 			System.gc();
 			
-			memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+			/*memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 			System.out.println("End of Algorithm : Memory in MB Consumed : " + (memory / (1024 * 1024)));
-		} catch (InterruptedException | ExecutionException e) {
+			*/
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -178,9 +186,10 @@ public class ParallelMergeSort {
 					//end = data.length;
 				}
 				
-				memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+				/*memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 				System.out.println("Sub Array "+ threadNo + ": Memory in MB Consumed : " + (memory / (1024 * 1024)));
-
+				*/
+				
 				Arrays.sort(temp);
 				//Arrays.sort(data, start, end);
 				
@@ -203,9 +212,9 @@ public class ParallelMergeSort {
 				int bLen = b.length;
 				int mergeArray[] = new int[a.length + b.length];
 				
-				memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+				/*memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 				System.out.println("Merge Callable : Memory in MB Consumed : " + (memory / (1024 * 1024)));
-				
+				*/
 				int aPointe = 0, bPointe = 0, mergePointer = 0;
 
 				while(aLen > 0 || bLen > 0) {
@@ -260,6 +269,14 @@ public class ParallelMergeSort {
 		};
 
 		return callable;
+	}
+	
+	public static void setParallelism(int noOfThreads) {
+		NO_OF_THREADS = noOfThreads;
+	}
+	
+	public static void resetParallelism() {
+		NO_OF_THREADS = Runtime.getRuntime().availableProcessors();
 	}
 
 
