@@ -82,6 +82,16 @@ public class ParallelMergeSort {
 			System.gc();
 		}
 	}
+	
+	public static void sort(int data[], boolean cautious) {
+		if(cautious) {
+			if(data.length <= 2000000) {
+				Arrays.sort(data);
+				return;
+			}
+		}
+		sort(data);
+	}
 
 	private static Callable<int[]> createSubArraySortCallable(int threadNo, int sizePerThread, int data[]) {
 		Callable<int[]> r = new Callable<int[]>() {

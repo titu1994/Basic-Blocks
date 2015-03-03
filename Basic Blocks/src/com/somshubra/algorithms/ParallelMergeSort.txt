@@ -5,7 +5,7 @@ Input : Data array data[] of size n
 Consider,
 p = no of available threads
 
-Algorithm Sort() {
+Algorithm sort(data[]) {
 
 	size_per_thread = n / p
 	for i = 0 to p-1
@@ -85,5 +85,15 @@ Algorithm createMergedArray(a[], b[]) {
 	return mergeArray;
 }
 
-TimeComplexity : 
+TimeComplexity : O(n log(n/p)) ??
 Space Complexity : O(2n)
+
+Statistics :
+
+With 4 processors [p = 4],
+Surpasses Arrays.sort() at n >= 2 Million (2000000)
+Gain at n = 10 Million (10000000) ~ 60% - 70% (585 ms vs. 972 ms) [Memory = 115 MB at peak, array memory = 38 MB, memory ratio = 3.0224]
+Gain at n = 100 Million (100000000) ~ 93% - 100% (5425 ms vs. 10998 ms) [Memory = 1145 MB at peak, array memory = 382MB , memory ratio = 2.9974]
+
+
+
