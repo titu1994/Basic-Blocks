@@ -66,7 +66,7 @@ There are several packages with random classes ranging from cryptography to sort
 
 <p>I wanted to create a Random number generator whose outputs were so erratic, it might simulate humans. Succeeded upto a point, although if carefully traced back, it's values can still be predicted. Not a complete failure, but not a perfect shining example of success either. </p>
 
-<div class="highlight highlight-java"><pre><span class="pl-stj">TrueRandom</span> random <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">TrueRandom</span>();
+<div class="highlight highlight-Java"><pre><span class="pl-stj">TrueRandom</span> random <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">TrueRandom</span>();
 random<span class="pl-k">.</span>nextInt();</pre></div>
 
 <h3>
@@ -85,7 +85,7 @@ random<span class="pl-k">.</span>nextInt();</pre></div>
 
 <p>Note to self : Try and reduce Space Complexity of ParallelMergeSort, and if possible, improve performance of PartitionParallelMergeSort as well.</p>
 
-<div class="highlight highlight-java"><pre><span class="pl-st">int</span> data[] <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">int</span>[n]; <span class="pl-c">//Fill with random data</span>
+<div class="highlight highlight-Java"><pre><span class="pl-st">int</span> data[] <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">int</span>[n]; <span class="pl-c">//Fill with random data</span>
 <span class="pl-stj">ParallelMergeSort</span><span class="pl-k">.</span>sort(data);
 <span class="pl-c">//Or</span>
 <span class="pl-stj">PartitionParallalMergeSort</span><span class="pl-k">.</span>sort(data);</pre></div>
@@ -95,7 +95,7 @@ random<span class="pl-k">.</span>nextInt();</pre></div>
 
 <p>Test classes for above packages. Contains the all important ResultWriter class which is my implementation of a helper class to write the results of tests into some file. Multithreaded and based on ExecutorService framework, so dont forget to closeWriter();</p>
 
-<div class="highlight highlight-java"><pre><span class="pl-stj">ResultWriter</span> writer <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">ResultWriter</span>(<span class="pl-s1"><span class="pl-pds">"</span>Filename<span class="pl-pds">"</span></span>);
+<div class="highlight highlight-Java"><pre><span class="pl-stj">ResultWriter</span> writer <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">ResultWriter</span>(<span class="pl-s1"><span class="pl-pds">"</span>Filename<span class="pl-pds">"</span></span>);
 writer<span class="pl-k">.</span>write(<span class="pl-s1"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span>);
 writer<span class="pl-k">.</span>closeWriter();</pre></div>
 
