@@ -57,8 +57,9 @@ There are several packages with random classes ranging from cryptography to sort
 <h3>
 <a id="files" class="anchor" href="#files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Files</h3>
 
-<p>I don't exactly remember why, but I wanted to implement an asynchronous file sharing algorithm over TCP protocol. Java has a nice API for files, multithreading and socket programming, so, why not? Well it seems my poor understanding of java.nio and java.net packages led to the project's failure. Text files are transferred as fast as lightning, even at sizes of a few gigabytes, but looses indentation. That is to say nothing of files such as Word, PDF, or even simple JPegs. 
-\nNote to self : Fix this mess up sometime.</p>
+<p>I don't exactly remember why, but I wanted to implement an asynchronous file sharing algorithm over TCP protocol. Java has a nice API for files, multithreading and socket programming, so, why not? Well it seems my poor understanding of java.nio and java.net packages led to the project's failure. Text files are transferred as fast as lightning, even at sizes of a few gigabytes, but looses indentation. That is to say nothing of files such as Word, PDF, or even simple JPegs. </p>
+
+<p>Note to self : Fix this mess up sometime.</p>
 
 <h3>
 <a id="random" class="anchor" href="#random" aria-hidden="true"><span class="octicon octicon-link"></span></a>Random</h3>
@@ -76,10 +77,13 @@ random<span class="pl-k">.</span>nextInt();</pre></div>
 <h3>
 <a id="sort" class="anchor" href="#sort" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sort</h3>
 
-<p>My pride and joy as a Computer Science student is to develop faster, better and more efficient algorithms/programs. Succeeded in a way of speaking, since my ParallelMergeSort beats even Arrays.sort() on datasets larger equal or larger than 10 Million data items and is available from Java 6 onwards. Arrays.parallelSort(), in Java 8, beats this class even at 100 Million data item.
-\nMy one regret : Space complexity of ParallelMergeSort is O(2n). 
-\nMy attempt to improve upon this class of mine, led me to develop PartitionParallelMergeSort, based on the Java 8 Fork/Join Framework. However, maybe due to my own inability, or some reason, it's performance is highly lacking, and it cant tolerate data sets of even 10 Million items. 
-\nNote to self : Try and reduce Space Complexity of ParallelMergeSort, and if possible, improve performance of PartitionParallelMergeSort as well.</p>
+<p>My pride and joy as a Computer Science student is to develop faster, better and more efficient algorithms/programs. Succeeded in a way of speaking, since my ParallelMergeSort beats even Arrays.sort() on datasets larger equal or larger than 10 Million data items and is available from Java 6 onwards. Arrays.parallelSort(), in Java 8, beats this class even at 100 Million data item.</p>
+
+<p>My one regret : Space complexity of ParallelMergeSort is O(2n). </p>
+
+<p>My attempt to improve upon this class of mine, led me to develop PartitionParallelMergeSort, based on the Java 8 Fork/Join Framework. However, maybe due to my own inability, or some reason, it's performance is highly lacking, and it cant tolerate data sets of even 10 Million items. </p>
+
+<p>Note to self : Try and reduce Space Complexity of ParallelMergeSort, and if possible, improve performance of PartitionParallelMergeSort as well.</p>
 
 <div class="highlight highlight-java"><pre><span class="pl-st">int</span> data[] <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">int</span>[n]; <span class="pl-c">//Fill with random data</span>
 <span class="pl-stj">ParallelMergeSort</span><span class="pl-k">.</span>sort(data);
