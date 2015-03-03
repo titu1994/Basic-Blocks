@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Basic Building Blocks by titu1994</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/titu1994/Basic-Blocks">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/titu1994/Basic-Blocks/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/titu1994/Basic-Blocks/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Basic Building Blocks</h1>
+          <p>Just for testing ideas!</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/titu1994">titu1994</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a id="welcome-to-basic-building-blocks" class="anchor" href="#welcome-to-basic-building-blocks" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to Basic Building Blocks</h1>
+
+<p>This entire repository is a giant Java testing ground for me. All the classes here are experimental and are merely for fun. 
+There are several packages with random classes ranging from cryptography to sorting to file handling.</p>
+
+<h2>
+<a id="notes-on-the-following-packages" class="anchor" href="#notes-on-the-following-packages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Notes on the following packages</h2>
+
+<p>Currently crypto package is not implemented, though I have some future plans for it. I also seem to have a few packages such as the .files package, which have been poorly implemented. My bad... </p>
+
+<h3>
+<a id="cryptography" class="anchor" href="#cryptography" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cryptography</h3>
+
+<p>I decided to implement a Hashed-Unhashed random mapping of ASCII characters to act as a simple crypto, since I wished to try implementing my own secure protocol. Miserably failed. Well, the idea was good enough, so of my interest is piqued again, i'll attempt to complete what I started.</p>
+
+<h3>
+<a id="files" class="anchor" href="#files" aria-hidden="true"><span class="octicon octicon-link"></span></a>Files</h3>
+
+<p>I don't exactly remember why, but I wanted to implement an asynchronous file sharing algorithm over TCP protocol. Java has a nice API for files, multithreading and socket programming, so, why not? Well it seems my poor understanding of java.nio and java.net packages led to the project's failure. Text files are transferred as fast as lightning, even at sizes of a few gigabytes, but looses indentation. That is to say nothing of files such as Word, PDF, or even simple JPegs. 
+Note to self : Fix this mess up sometime.</p>
+
+<h3>
+<a id="random" class="anchor" href="#random" aria-hidden="true"><span class="octicon octicon-link"></span></a>Random</h3>
+
+<p>I wanted to create a Random number generator whose outputs were so erratic, it might simulate humans. Succeeded upto a point, although if carefully traced back, it's values can still be predicted. Not a complete failure, but not a perfect shining example of success either. </p>
+
+<div class="highlight highlight-java"><pre><span class="pl-stj">TrueRandom</span> random <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">TrueRandom</span>();
+random<span class="pl-k">.</span>nextInt();</pre></div>
+
+<h3>
+<a id="serialization" class="anchor" href="#serialization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Serialization</h3>
+
+<p>When i first found the GSON library I thought there would be no use to it other than web server communication. How wrong can one man be... Oh well, at least I have rectified my mistake. This works splendidly to store and retrieve extremely large objects to and from a file storage. I expected nothing less from a Google library.</p>
+
+<h3>
+<a id="sort" class="anchor" href="#sort" aria-hidden="true"><span class="octicon octicon-link"></span></a>Sort</h3>
+
+<p>My pride and joy as a Computer Science student is to develop faster, better and more efficient algorithms/programs. Succeeded in a way of speaking, since my ParallelMergeSort beats even Arrays.sort() on datasets larger equal or larger than 10 Million data items and is available from Java 6 onwards. Arrays.parallelSort(), in Java 8, beats this class even at 100 Million data item.
+My one regret : Space complexity of ParallelMergeSort is O(2n). 
+My attempt to improve upon this class of mine, led me to develop PartitionParallelMergeSort, based on the Java 8 Fork/Join Framework. However, maybe due to my own inability, or some reason, it's performance is highly lacking, and it cant tolerate data sets of even 10 Million items. 
+Note to self : Try and reduce Space Complexity of ParallelMergeSort, and if possible, improve performance of PartitionParallelMergeSort as well.</p>
+
+<div class="highlight highlight-java"><pre><span class="pl-st">int</span> data[] <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">int</span>[n]; <span class="pl-c">//Fill with random data</span>
+<span class="pl-stj">ParallelMergeSort</span><span class="pl-k">.</span>sort(data);
+<span class="pl-c">//Or</span>
+<span class="pl-stj">PartitionParallalMergeSort</span><span class="pl-k">.</span>sort(data);</pre></div>
+
+<h3>
+<a id="tests" class="anchor" href="#tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tests</h3>
+
+<p>Test classes for above packages. Contains the all important ResultWriter class which is my implementation of a helper class to write the results of tests into some file. Multithreaded and based on ExecutorService framework, so dont forget to closeWriter();</p>
+
+<div class="highlight highlight-java"><pre><span class="pl-stj">ResultWriter</span> writer <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">ResultWriter</span>(<span class="pl-s1"><span class="pl-pds">"</span>Filename<span class="pl-pds">"</span></span>);
+writer<span class="pl-k">.</span>write(<span class="pl-s1"><span class="pl-pds">"</span>data<span class="pl-pds">"</span></span>);
+writer<span class="pl-k">.</span>closeWriter();</pre></div>
+
+<h3>
+<a id="future" class="anchor" href="#future" aria-hidden="true"><span class="octicon octicon-link"></span></a>Future</h3>
+
+<p>Well, for now this is all that this bundle of misfit classes can do. I plan to improve them, as and when I have some time. Also, ideas will always pop into my head, and this repo will come to my aid once again.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
