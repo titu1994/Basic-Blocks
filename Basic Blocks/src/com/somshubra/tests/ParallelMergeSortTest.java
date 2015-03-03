@@ -37,7 +37,8 @@ public class ParallelMergeSortTest {
 		//System.out.println("Memory in MB Consumed : " + (memory / (1024 * 1024)));
 		
 		long diff = end - begin;
-		System.out.println("Millitime : " + diff);
+		long time1 = diff;
+		System.out.println("ParallelMergeSort.sort() Millitime : " + diff);
 		
 		runtime.gc();
 		
@@ -54,7 +55,12 @@ public class ParallelMergeSortTest {
 		//System.out.println("Memory in MB Consumed : " + (memory / (1024 * 1024)));
 		
 		diff = end - begin;
-		System.out.println("Arrays.Sort Millitime : " + diff);
+		long time2 = diff;
+		
+		System.out.println("Arrays.Sort() Millitime : " + diff);
+		System.out.println("Gain (in ms) : " + (time2 - time1));
+		System.out.println("Percentage gain : " + ((Math.abs(time2) - Math.abs(time1)) / (double)time1) * 100 + " %");
+		
 	}
 
 }
