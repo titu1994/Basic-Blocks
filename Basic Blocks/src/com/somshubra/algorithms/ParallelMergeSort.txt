@@ -3,7 +3,7 @@ ParallelMergeSort Algorithm
 Input : Data array data[] of size n
 
 Consider,
-p = no of available threads
+p = no of available processors
 
 Algorithm sort(data[]) {
 
@@ -12,14 +12,14 @@ Algorithm sort(data[]) {
 		start new thread with createSubArray(i, size_per_thread, data) as the executable code base
 	
 	wait for all threads to complete their respective createSubArray(...) function, in the order of their creation
-	store resultant sub arrays into list 
+	store resultant sub arrays into list in same order of creation of threads.
 
 	for i = 0 to p-1, i = i + 2
 		obtain sub array sub1, sub2 by retrieving the first and second items in list 
 		start new thread with createMergedArray(sub1, sub2) as the executable code base
 	
 	wait for all threads to complete createMergedArray(...) function, in the order of their creation
-	append the resultant merged arrays, in order or creation, at end of list 
+	append the resultant merged arrays, in order or creation of their thread, at end of list 
 	
 	while size(list) > 1
 		obtain merged array mer1, mer2 by by retrieving the first and second items in list 
@@ -34,11 +34,11 @@ Algorithm sort(data[]) {
 
 Algorithm createSubArray(threadNo, size_per_thread, data[]) {
 	if threadNo != (p-1)
-		temp[] = copy range of data from (size_per_thread * threadNo) to  (size_per_thread * (threadNo + 1))
+		temp[] = copy range of data array from (size_per_thread * threadNo) to  (size_per_thread * (threadNo + 1))
 	else
-		temp[] = copy range of data from (size_per_thread * threadNo) to data.length
+		temp[] = copy range of data array from (size_per_thread * threadNo) to data.length
 		
-	Sort temp[] with suitable algorithm. //Generally TimSort is applied
+	Sort temp[] with suitable algorithm. //Generally TimSort is applied : Arrays.sort(temp);
 	return temp;	
 }
 
@@ -85,7 +85,7 @@ Algorithm createMergedArray(a[], b[]) {
 	return mergeArray;
 }
 
-TimeComplexity : O(n log(n/p)) ??
+Time Complexity : O(n log(n/p)) ??
 Space Complexity : O(2n)
 
 Statistics :

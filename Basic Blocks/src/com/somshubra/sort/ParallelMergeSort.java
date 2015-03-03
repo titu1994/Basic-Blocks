@@ -33,7 +33,7 @@ public class ParallelMergeSort {
 		//long arrayMemory = memory / (1024 * 1024);
 	
 		for(int i = 0; i < NO_OF_THREADS; i++) {
-			list.add(executor.submit(createSubArraySortCallable(i, sizePerThread, data)));
+			list.add(executor.submit(createSplitArray(i, sizePerThread, data)));
 		}
 		executor.shutdown();
 
@@ -43,20 +43,19 @@ public class ParallelMergeSort {
 			e.printStackTrace();
 		}
 
-		//Start Merge Threads
 		executor = Executors.newFixedThreadPool(NO_OF_THREADS);
 
 		try {
 			for(int i = 0; i < NO_OF_THREADS; i += 2) {
-				list.add(executor.submit(createMergedArrayCallable(list.remove(0).get(), list.remove(0).get())));
+				list.add(executor.submit(createMergeArray(list.remove(0).get(), list.remove(0).get())));
 			}
 			list.trimToSize();
 	
 			for(int i = list.size(); i > 1; i = list.size()) {
-				list.add(executor.submit(createMergedArrayCallable(list.remove(0).get(), list.remove(0).get())));
-				list.trimToSize();
+				list.add(executor.submit(createMergeArray(list.remove(0).get(), list.remove(0).get())));
 			}
-			
+
+			list.trimToSize();
 			System.gc();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
@@ -93,7 +92,7 @@ public class ParallelMergeSort {
 		sort(data);
 	}
 
-	private static Callable<int[]> createSubArraySortCallable(int threadNo, int sizePerThread, int data[]) {
+	private static Callable<int[]> createSplitArray(int threadNo, int sizePerThread, int data[]) {
 		Callable<int[]> r = new Callable<int[]>() {
 
 			@Override
@@ -112,7 +111,7 @@ public class ParallelMergeSort {
 		return r;
 	}
 
-	private static Callable<int[]> createMergedArrayCallable(int a[], int b[]) {
+	private static Callable<int[]> createMergeArray(int a[], int b[]) {
 		Callable<int[]> callable = new Callable<int[]>() {
 			@Override
 			public int[] call() throws Exception {
