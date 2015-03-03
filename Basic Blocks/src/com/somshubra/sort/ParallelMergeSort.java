@@ -26,14 +26,14 @@ public class ParallelMergeSort {
 		}
 		
 		int sizePerThread = data.length / NO_OF_THREADS;
-		ArrayList<Future<int[]>> splitList = new ArrayList<Future<int[]>>(NO_OF_THREADS);
+		ArrayList<Future<int[]>> list = new ArrayList<Future<int[]>>(NO_OF_THREADS);
 		executor = Executors.newFixedThreadPool(NO_OF_THREADS);
 		
-		memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-		long arrayMemory = memory / (1024 * 1024);
+		//memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		//long arrayMemory = memory / (1024 * 1024);
 	
 		for(int i = 0; i < NO_OF_THREADS; i++) {
-			splitList.add(executor.submit(createSubArraySortCallable(i, sizePerThread, data)));
+			list.add(executor.submit(createSubArraySortCallable(i, sizePerThread, data)));
 		}
 		executor.shutdown();
 
@@ -47,14 +47,14 @@ public class ParallelMergeSort {
 		executor = Executors.newFixedThreadPool(NO_OF_THREADS);
 
 		try {
-			for(int j = 0; j < NO_OF_THREADS; j += 2) {
-				splitList.add(executor.submit(createMergedArrayCallable(splitList.remove(0).get(), splitList.remove(0).get())));
+			for(int i = 0; i < NO_OF_THREADS; i += 2) {
+				list.add(executor.submit(createMergedArrayCallable(list.remove(0).get(), list.remove(0).get())));
 			}
-			splitList.trimToSize();
+			list.trimToSize();
 	
-			for(int i = splitList.size(); i > 1; i = splitList.size()) {
-				splitList.add(executor.submit(createMergedArrayCallable(splitList.remove(0).get(), splitList.remove(0).get())));
-				splitList.trimToSize();
+			for(int i = list.size(); i > 1; i = list.size()) {
+				list.add(executor.submit(createMergedArrayCallable(list.remove(0).get(), list.remove(0).get())));
+				list.trimToSize();
 			}
 			
 			System.gc();
@@ -68,11 +68,11 @@ public class ParallelMergeSort {
 		
 		try {
 			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-			System.arraycopy(splitList.remove(0).get(), 0, data, 0, data.length);
+			System.arraycopy(list.remove(0).get(), 0, data, 0, data.length);
 			
-			splitList = null;
-			long mergeMemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/(1024 * 1024);
-			System.out.println("Memory Ratio : " + (mergeMemory / (double) arrayMemory));
+			list = null;
+			//long mergeMemory = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/(1024 * 1024);
+			//System.out.println("Memory Ratio : " + (mergeMemory / (double) arrayMemory));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {

@@ -59,8 +59,7 @@ public class ParallelMergeSortTest {
 		
 		System.out.println("Arrays.Sort() Millitime : " + diff);
 		System.out.println("Gain (in ms) : " + (time2 - time1));
-		System.out.println("Percentage gain : " + ((Math.abs(time2) - Math.abs(time1)) / (double)time1) * 100 + " %");
-		
+		System.out.println("Percentage gain : " + ((time2 - time1) / (double)time1) * 100 + " %");
 	}
 
 }

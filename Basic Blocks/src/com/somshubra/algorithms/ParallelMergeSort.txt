@@ -1,0 +1,89 @@
+ParallelMergeSort Algorithm
+
+Input : Data array data[] of size n
+
+Consider,
+p = no of available threads
+
+Algorithm Sort() {
+
+	size_per_thread = n / p
+	for i = 0 to p-1
+		start new thread with createSubArray(i, size_per_thread, data) as the executable code base
+	
+	wait for all threads to complete their respective createSubArray(...) function, in the order of their creation
+	store resultant sub arrays into list 
+
+	for i = 0 to p-1, i = i + 2
+		obtain sub array sub1, sub2 by retrieving the first and second items in list 
+		start new thread with createMergedArray(sub1, sub2) as the executable code base
+	
+	wait for all threads to complete createMergedArray(...) function, in the order of their creation
+	append the resultant merged arrays, in order or creation, at end of list 
+	
+	while size(list) > 1
+		obtain merged array mer1, mer2 by by retrieving the first and second items in list 
+		start new thread with createMergedArray(mer1, mer2) as the executable code base
+		wait if needed to obtain merged array
+		append resultant merged array at end of list
+	
+	wait for final thread to complete createMergedArray(...) function and return result finalArray
+
+	copy all elements of finalArray into data array
+}
+
+Algorithm createSubArray(threadNo, size_per_thread, data[]) {
+	if threadNo != (p-1)
+		temp[] = copy range of data from (size_per_thread * threadNo) to  (size_per_thread * (threadNo + 1))
+	else
+		temp[] = copy range of data from (size_per_thread * threadNo) to data.length
+		
+	Sort temp[] with suitable algorithm. //Generally TimSort is applied
+	return temp;	
+}
+
+Algorithm createMergedArray(a[], b[]) {
+	aLen = a.length
+	bLen = b.length
+	mergedArray[] is a new, empty array of size [aLen + bLen]
+	
+	aPointer = bPointer = mergePointer = 0
+	
+	while(aLen > 0 || bLen > 0) {
+		if(aLen > 0 && bLen > 0) {
+			while(aLen > 0 && bLen > 0) {
+				if(a[aPointe] < b[bPointe]) {
+					mergeArray[mergePointer] = a[aPointe];
+					aPointe++;
+					aLen--;
+				}
+				else {
+					mergeArray[mergePointer] = b[bPointe];
+					bPointe++;
+					bLen--;
+				}
+				mergePointer++;
+			}
+		}
+		else if(aLen > 0) {
+			while(aLen > 0) {
+				mergeArray[mergePointer] = a[aPointe];
+				mergePointer++;
+				aPointe++;
+				aLen--;
+			}
+		}
+		else if(bLen > 0) {
+			while(bLen > 0) {
+				mergeArray[mergePointer] = b[bPointe];
+				mergePointer++;
+				bPointe++;
+				bLen--;
+			}
+		}
+	}
+	return mergeArray;
+}
+
+TimeComplexity : 
+Space Complexity : O(2n)
