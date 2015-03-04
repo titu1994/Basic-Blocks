@@ -29,7 +29,7 @@ public class ParallelMergeSortTest {
 		
 		long begin = System.currentTimeMillis();
 		//ParallelMergeSort.setParallelism(4);
-		ParallelMergeSort.sort(data);
+		//ParallelMergeSort.sort(data);
 		long end = System.currentTimeMillis();
 		
 		//System.out.println("Sorted Data : " + Arrays.toString(data));
@@ -38,6 +38,7 @@ public class ParallelMergeSortTest {
 		
 		long diff = end - begin;
 		long time1 = diff;
+		System.out.println("Is Sorted : " + isSorted(data));
 		System.out.println("ParallelMergeSort.sort() Millitime : " + diff);
 		
 		runtime.gc();
@@ -60,6 +61,15 @@ public class ParallelMergeSortTest {
 		System.out.println("Arrays.Sort() Millitime : " + diff);
 		System.out.println("Gain (in ms) : " + (time2 - time1));
 		System.out.println("Percentage gain : " + ((time2 - time1) / (double)time1) * 100 + " %");
+	}
+	
+	private static boolean isSorted(int data[]) {
+		boolean sorted = true;
+		for(int i = 0; i < data.length - 1; i++) {
+			if(data[i] > data[i+1])
+				return false;
+		}
+		return sorted;
 	}
 
 }

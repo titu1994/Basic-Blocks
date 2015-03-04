@@ -9,13 +9,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class ParallelMergeSort {
+public class TestParallelMergeSort {
 	private static int NO_OF_THREADS = Runtime.getRuntime().availableProcessors();
 	private static ExecutorService executor;
 	private static long memory;
 	private static int split1[], split2[];
 
-	private ParallelMergeSort() {
+	private TestParallelMergeSort() {
 
 	}
 
@@ -35,6 +35,7 @@ public class ParallelMergeSort {
 		for(int i = 0; i < NO_OF_THREADS; i++) {
 			list.add(executor.submit(createSplitArray(i, sizePerThread, data)));
 		}
+		
 		executor.shutdown();
 
 		try {
@@ -45,13 +46,14 @@ public class ParallelMergeSort {
 
 			memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 			System.out.println("Before Horizontal Merge : Memory in MB : " + (memory/(1024*1024)));
-
+			
+			int limit = NO_OF_THREADS / 2;
 
 			for(int i = 0; i < NO_OF_THREADS; i += 2) {
 				split1 = list.remove(0).get();
 				split2 = list.remove(0).get();
 
-				list.add(executor.submit(createMergeArray(split1, split2)));
+				//list.add(executor.submit(createMergeArray(split1, split2)));
 
 				split1 = null;
 				split2 = null;
@@ -72,7 +74,7 @@ public class ParallelMergeSort {
 				split1 = list.remove(0).get();
 				split2 = list.remove(0).get();
 				
-				list.add(executor.submit(createMergeArray(split1, split2)));
+				//list.add(executor.submit(createMergeArray(split1, split2)));
 
 				split1 = null;
 				split2 = null;
@@ -141,7 +143,7 @@ public class ParallelMergeSort {
 		return r;
 	}
 
-	private static Callable<int[]> createMergeArray(int a[], int b[]) {
+	private static Callable<int[]> createMergeArray(int a[], int b[], int data[], int start) {
 		Callable<int[]> callable = new Callable<int[]>() {
 			@Override
 			public int[] call() throws Exception {
@@ -198,3 +200,4 @@ public class ParallelMergeSort {
 	}
 
 }
+
