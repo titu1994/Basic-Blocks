@@ -1,6 +1,7 @@
 package com.somshubra.sort;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,11 @@ public class ParallelQuickSort {
 	}
 
 	public static void sort(int[] data) {
+		if(data.length <= THRESHOLD) {
+			Arrays.sort(data);
+			return;
+		}
+		
 		if(NO_OF_THREADS == 1) {
 			Arrays.sort(data);
 			return;
@@ -48,8 +54,8 @@ public class ParallelQuickSort {
 			e.printStackTrace();
 		}
 		
-		System.gc();
-		
+		//System.gc();
+		THRESHOLD = 1000000;
 	}
 	
 	private static Runnable quickSortCallable(int low, int high, int data[]) {
@@ -57,7 +63,7 @@ public class ParallelQuickSort {
 			
 			@Override
 			public void run() {
-				 if(high - low <= THRESHOLD) {
+				 if((high - low) <= THRESHOLD) {
 					Arrays.sort(data, low, high+1);
 					
 					synchronized (lock) {
@@ -105,5 +111,13 @@ public class ParallelQuickSort {
 			}
 		};
 		return r;
+	}
+	
+	public static void setParallelism(int noOfThreads) {
+		NO_OF_THREADS = noOfThreads;
+	}
+	
+	public static void resetParralelism() {
+		NO_OF_THREADS = Runtime.getRuntime().availableProcessors();
 	}
 }
