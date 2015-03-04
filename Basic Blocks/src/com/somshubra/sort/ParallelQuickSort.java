@@ -47,6 +47,8 @@ public class ParallelQuickSort {
 			e.printStackTrace();
 		}
 		
+		System.gc();
+		
 	}
 	
 	private static Runnable quickSortCallable(int low, int high, int data[]) {

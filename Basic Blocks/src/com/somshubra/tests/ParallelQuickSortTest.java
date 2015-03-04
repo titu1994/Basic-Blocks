@@ -39,7 +39,7 @@ public class ParallelQuickSortTest {
 		long diff = end - begin;
 		long time1 = diff;
 		//System.out.println("Is Sorted : " + isSorted(data));
-		System.out.println("ParallelMergeSort.sort() Millitime : " + diff);
+		System.out.println("ParallelQuickSort.sort() Millitime : " + diff);
 		
 		runtime.gc();
 		
@@ -48,8 +48,8 @@ public class ParallelQuickSortTest {
 		}
 		
 		begin = System.currentTimeMillis();
-		//Arrays.parallelSort(data);
-		Arrays.sort(data);
+		Arrays.parallelSort(data);
+		//Arrays.sort(data);
 		end = System.currentTimeMillis();
 		
 		//memory = runtime.totalMemory() - runtime.freeMemory();
