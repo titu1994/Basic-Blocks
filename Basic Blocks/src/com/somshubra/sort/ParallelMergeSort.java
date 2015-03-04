@@ -14,6 +14,7 @@ public class ParallelMergeSort {
 	private static int NO_OF_THREADS = Runtime.getRuntime().availableProcessors();
 	private static ExecutorService executor;
 	private static long memory;
+	private static int split1[], split2[];
 
 	private ParallelMergeSort() {
 
@@ -43,9 +44,11 @@ public class ParallelMergeSort {
 			e.printStackTrace();
 		}
 
+		System.gc();
 		executor = Executors.newFixedThreadPool(NO_OF_THREADS);
 		
-		int split1[], split2[];
+		memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		System.out.println("Before Horizontal Merge : Memory in MB : " + (memory/(1024*1024)));
 
 		try {
 			for(int i = 0; i < NO_OF_THREADS; i += 2) {
@@ -56,10 +59,14 @@ public class ParallelMergeSort {
 				
 				split1 = null;
 				split2 = null;
+				System.gc();
 			}
-
-			System.gc();
+			
 			list.trimToSize();
+			System.gc();
+			
+			memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+			System.out.println("After Horizontal Merge: Memory in MB : " + (memory/(1024*1024)));
 	
 			for(int i = list.size(); i > 1; i = list.size()) {
 				split1 = list.remove(0).get();

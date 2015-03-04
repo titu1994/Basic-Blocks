@@ -86,7 +86,7 @@ Algorithm createMergedArray(a[], b[]) {
 }
 
 Time Complexity : O(n log(n/p)) ??
-Space Complexity : O(2n)
+Space Complexity : O(n)
 
 Statistics :
 
