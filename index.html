@@ -79,16 +79,20 @@ random<span class="pl-k">.</span>nextInt();</pre></div>
 
 <p>My pride and joy as a Computer Science student is to develop faster, better and more efficient algorithms/programs. Succeeded in a way of speaking, since my ParallelMergeSort beats even Arrays.sort() on datasets larger equal or larger than 2 Million data items and is available from Java 6 onwards. However, Arrays.parallelSort(), available in Java 8 onwards, beats this class even at 100 Million data items, which is the practical limit of available RAM for this sorting algorithm.</p>
 
-<p>My one regret : Space complexity of ParallelMergeSort is O(2n). </p>
+<p>My one regret : Space complexity of ParallelMergeSort is O(n). </p>
 
 <p>My attempt to improve upon this class of mine, led me to develop PartitionParallelMergeSort, based on the Java 8 Fork/Join Framework. However, maybe due to my own inability, or some reason, it's performance is highly lacking, and it cant tolerate data sets of even 10 Million items. </p>
 
 <p>Note to self : Try and reduce Space Complexity of ParallelMergeSort, and if possible, improve performance of PartitionParallelMergeSort as well.</p>
 
+<p>Finally, ParallelQuickSort comes to save me. This is my fastest, and most efficient sorting algorithm I've ever implemented. Can sort up any number of data items, in a time that is slightly faster than even the Java 8 Arrays.parallelSort(). An acheivement, since Arrays.parallelSort() crashes at data sets of over 150 Million.</p>
+
 <div class="highlight highlight-Java"><pre><span class="pl-st">int</span> data[] <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-stj">int</span>[n]; <span class="pl-c">//Fill with random data</span>
 <span class="pl-stj">ParallelMergeSort</span><span class="pl-k">.</span>sort(data);
 <span class="pl-c">//Or</span>
-<span class="pl-stj">PartitionParallalMergeSort</span><span class="pl-k">.</span>sort(data);</pre></div>
+<span class="pl-stj">PartitionParallalMergeSort</span><span class="pl-k">.</span>sort(data);
+<span class="pl-c">//Or</span>
+<span class="pl-stj">ParallelQuickSort</span><span class="pl-k">.</span>sort(data);</pre></div>
 
 <h3>
 <a id="tests" class="anchor" href="#tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tests</h3>
