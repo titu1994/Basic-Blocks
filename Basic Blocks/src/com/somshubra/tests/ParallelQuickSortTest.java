@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-import com.somshubra.sort.ParallelMergeSort;
+import com.somshubra.sort.ParallelQuickSort;
 
-public class ParallelMergeSortTest {
+public class ParallelQuickSortTest {
 
 	public static void main(String[] args) {
 		Random r = new Random();
@@ -29,7 +29,7 @@ public class ParallelMergeSortTest {
 		
 		long begin = System.currentTimeMillis();
 		//ParallelMergeSort.setParallelism(4);
-		ParallelMergeSort.sort(data);
+		ParallelQuickSort.sort(data);
 		long end = System.currentTimeMillis();
 		
 		//System.out.println("Sorted Data : " + Arrays.toString(data));
@@ -38,7 +38,7 @@ public class ParallelMergeSortTest {
 		
 		long diff = end - begin;
 		long time1 = diff;
-		System.out.println("Is Sorted : " + isSorted(data));
+		//System.out.println("Is Sorted : " + isSorted(data));
 		System.out.println("ParallelMergeSort.sort() Millitime : " + diff);
 		
 		runtime.gc();
@@ -73,29 +73,3 @@ public class ParallelMergeSortTest {
 	}
 
 }
-/*
- * https://courses.cs.washington.edu/courses/cse373/13wi/lectures/03-13/MergeSort.java
- * original:
-   1024000 elements  =>     187 ms 
-   2048000 elements  =>     378 ms 
-   4096000 elements  =>     810 ms 
-   8192000 elements  =>    1636 ms 
-  16384000 elements  =>    3369 ms 
-  32768000 elements  =>    6751 ms 
-
-parallel (2 threads):
-   1024000 elements  =>     110 ms 
-   2048000 elements  =>     251 ms 
-   4096000 elements  =>     458 ms 
-   8192000 elements  =>     952 ms 
-  16384000 elements  =>    1860 ms 
-  32768000 elements  =>    3910 ms 
-
-parallel (4 threads):
-   1024000 elements  =>      82 ms 
-   2048000 elements  =>     166 ms 
-   4096000 elements  =>     342 ms 
-   8192000 elements  =>     674 ms 
-  16384000 elements  =>    1240 ms 
-  32768000 elements  =>    2668 ms 
-*/

@@ -147,6 +147,7 @@ public class ParallelMergeSort {
 			public int[] call() throws Exception {
 				int aLen = a.length;
 				int bLen = b.length;
+				
 				int mergeArray[] = new int[a.length + b.length];
 				int aPointe = 0, bPointe = 0, mergePointer = 0;
 
