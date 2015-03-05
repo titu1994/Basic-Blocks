@@ -20,11 +20,6 @@ public class ParallelQuickSort {
 	}
 
 	public static void sort(int[] data) {
-		if(data.length <= THRESHOLD) {
-			Arrays.sort(data);
-			return;
-		}
-		
 		if(NO_OF_THREADS == 1) {
 			Arrays.sort(data);
 			return;
@@ -111,6 +106,16 @@ public class ParallelQuickSort {
 			}
 		};
 		return r;
+	}
+	
+	public static void sort(int data[], boolean considerate) {
+		if(considerate) {
+			if(data.length <= THRESHOLD) {
+				Arrays.sort(data);
+				return;
+			}
+		}
+		sort(data);
 	}
 	
 	public static void setParallelism(int noOfThreads) {
