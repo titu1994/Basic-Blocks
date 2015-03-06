@@ -16,7 +16,6 @@ public class ParallelQuickSort {
 	private static Object lock = new Object();
 	
 	private ParallelQuickSort() {
-
 	}
 
 	public static void sort(int[] data) {

@@ -15,6 +15,11 @@ public class ParallelQuickSortTest {
 		System.out.print("Enter the no of elements : ");
 		int n = sc.nextInt();
 		
+		if(n <= 0)
+		{
+			System.out.println("Enter a valid number");
+			return;
+		}
 		Runtime runtime = Runtime.getRuntime();
 		
 		int data[] = new int[n];
@@ -48,8 +53,8 @@ public class ParallelQuickSortTest {
 		}
 		
 		begin = System.currentTimeMillis();
-		//Arrays.parallelSort(data);
-		Arrays.sort(data);
+		Arrays.parallelSort(data);
+		//Arrays.sort(data);
 		end = System.currentTimeMillis();
 		
 		//memory = runtime.totalMemory() - runtime.freeMemory();
