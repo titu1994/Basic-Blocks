@@ -36,6 +36,7 @@ public class PartitionParallelMergeSortTest {
 		//System.out.println("Memory in MB Consumed : " + (memory / (1024 * 1024)));
 		
 		long diff = end - begin;
+		System.out.println("Is Sorted : " + isSorted(data));
 		System.out.println("Millitime : " + diff);
 		
 		runtime.gc();
@@ -45,8 +46,8 @@ public class PartitionParallelMergeSortTest {
 		}
 		
 		begin = System.currentTimeMillis();
-		//Arrays.parallelSort(data);
-		Arrays.sort(data);
+		Arrays.parallelSort(data);
+		//Arrays.sort(data);
 		end = System.currentTimeMillis();
 		
 		//memory = runtime.totalMemory() - runtime.freeMemory();
@@ -54,6 +55,15 @@ public class PartitionParallelMergeSortTest {
 		
 		diff = end - begin;
 		System.out.println("Arrays.Sort Millitime : " + diff);
+	}
+	
+	private static boolean isSorted(int data[]) {
+		boolean sorted = true;
+		for(int i = 0; i < data.length - 1; i++) {
+			if(data[i] > data[i+1])
+				return false;
+		}
+		return sorted;
 	}
 
 }

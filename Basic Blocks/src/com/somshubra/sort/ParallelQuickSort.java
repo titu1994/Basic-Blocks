@@ -69,7 +69,7 @@ public class ParallelQuickSort {
 				}
 				 
 				int i = low, j = high;
-				int pivot = data[low + (high-low)/2];
+				int pivot = data[(low + high) >>> 1];
 				int temp;
 				
 				while (i <= j) {
