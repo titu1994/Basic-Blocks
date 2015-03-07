@@ -1,0 +1,55 @@
+{
+  "arraySize": 200000000,
+  "sortType": 2,
+  "parallelQuickSortTotalTime": 10579,
+  "arraySortTotalTime": -3011,
+  "totalMemoryConsumed": 764,
+  "gainInMilliseconds": -13590,
+  "percentageGain": -128.46204745250023,
+  "ranOutOfMemoryDueToParallelQuickSort": false,
+  "ranOutOfMemoryDueToArraysParallelSort": true
+}
+{
+  "arraySize": 200000000,
+  "sortType": 2,
+  "parallelQuickSortTotalTime": 10539,
+  "arraySortTotalTime": -3009,
+  "totalMemoryConsumed": 763,
+  "gainInMilliseconds": -13548,
+  "percentageGain": -128.55109592940505,
+  "ranOutOfMemoryDueToParallelQuickSort": false,
+  "ranOutOfMemoryDueToArraysParallelSort": true
+}
+{
+  "arraySize": 200000000,
+  "sortType": 2,
+  "parallelQuickSortTotalTime": 11367,
+  "arraySortTotalTime": -2951,
+  "totalMemoryConsumed": 763,
+  "gainInMilliseconds": -14318,
+  "percentageGain": -125.9611155098091,
+  "ranOutOfMemoryDueToParallelQuickSort": false,
+  "ranOutOfMemoryDueToArraysParallelSort": true
+}
+{
+  "arraySize": 200000000,
+  "sortType": 2,
+  "parallelQuickSortTotalTime": 11584,
+  "arraySortTotalTime": -2871,
+  "totalMemoryConsumed": 763,
+  "gainInMilliseconds": -14455,
+  "percentageGain": -124.78418508287292,
+  "ranOutOfMemoryDueToParallelQuickSort": false,
+  "ranOutOfMemoryDueToArraysParallelSort": true
+}
+{
+  "arraySize": 200000000,
+  "sortType": 2,
+  "parallelQuickSortTotalTime": 9745,
+  "arraySortTotalTime": -2837,
+  "totalMemoryConsumed": 763,
+  "gainInMilliseconds": -12582,
+  "percentageGain": -129.11236531554644,
+  "ranOutOfMemoryDueToParallelQuickSort": false,
+  "ranOutOfMemoryDueToArraysParallelSort": true
+}

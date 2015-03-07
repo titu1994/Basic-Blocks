@@ -26,7 +26,7 @@ public class ParallelQuickSort {
 		
 		THRESHOLD = data.length / NO_OF_THREADS;
 		counter.set(1);
-		executor = Executors.newFixedThreadPool(NO_OF_THREADS);
+		executor = Executors.newCachedThreadPool();
 		
 		counter.getAndIncrement();
 		executor.submit(quickSortCallable(0, data.length - 1, data));
