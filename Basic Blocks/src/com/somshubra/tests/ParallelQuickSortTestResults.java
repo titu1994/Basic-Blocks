@@ -16,7 +16,7 @@ import com.somshubra.sort.ParallelQuickSort;
 public class ParallelQuickSortTestResults {
 
 	public static void main(String[] args) throws IOException {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
 		Random r = new Random();
 		Scanner sc = new Scanner(System.in);
 		Runtime runtime = Runtime.getRuntime();
@@ -40,7 +40,7 @@ public class ParallelQuickSortTestResults {
 			return;
 		}
 		
-		File output = new File("Result " + n + ".txt");
+		File output = new File("Result " + n + " Type " + choice + ".json");
 		FileWriter fw = new FileWriter(output, true);
 		PrintWriter pw = new PrintWriter(new BufferedWriter(fw), true);
 
