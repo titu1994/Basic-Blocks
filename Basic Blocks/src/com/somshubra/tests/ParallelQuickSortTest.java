@@ -52,8 +52,8 @@ public class ParallelQuickSortTest {
 		}
 		
 		begin = System.currentTimeMillis();
-		Arrays.parallelSort(data);
-		//Arrays.sort(data);
+		//Arrays.parallelSort(data);
+		Arrays.sort(data);
 		end = System.currentTimeMillis();
 		
 		//memory = runtime.totalMemory() - runtime.freeMemory();

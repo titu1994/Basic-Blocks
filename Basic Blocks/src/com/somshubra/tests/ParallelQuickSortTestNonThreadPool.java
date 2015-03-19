@@ -4,10 +4,9 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-import com.somshubra.sort.ParallelDualPivotQuickSort;
-import com.somshubra.sort.ParallelQuickSort;
+import com.somshubra.sort.ParallelQuickSortNonThreadPool;
 
-public class ParallelDualPivotQuickSortTest {
+public class ParallelQuickSortTestNonThreadPool {
 
 	public static void main(String[] args) {
 		Random r = new Random();
@@ -35,7 +34,7 @@ public class ParallelDualPivotQuickSortTest {
 		
 		long begin = System.currentTimeMillis();
 		//ParallelMergeSort.setParallelism(4);
-		ParallelDualPivotQuickSort.sort(data);
+		ParallelQuickSortNonThreadPool.sort(data);
 		long end = System.currentTimeMillis();
 		
 		//System.out.println("Sorted Data : " + Arrays.toString(data));
@@ -54,8 +53,8 @@ public class ParallelDualPivotQuickSortTest {
 		}
 		
 		begin = System.currentTimeMillis();
-		Arrays.parallelSort(data);
-		//Arrays.sort(data);
+		//Arrays.parallelSort(data);
+		Arrays.sort(data);
 		end = System.currentTimeMillis();
 		
 		//memory = runtime.totalMemory() - runtime.freeMemory();
