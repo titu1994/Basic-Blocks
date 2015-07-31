@@ -1,4 +1,4 @@
-package com.somshubra.tests;
+package com.somshubra.tests.analysis;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,7 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.somshubra.sort.ParallelQuickSort;
 
-public class ParallelQuickSortTestResults {
+public class JavaSortingAnalysis {
 
 	public static void main(String[] args) throws IOException {
 		Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().create();
@@ -40,7 +40,7 @@ public class ParallelQuickSortTestResults {
 			return;
 		}
 		
-		File output = new File("Result " + n + " Type " + choice + ".json");
+		File output = new File("Java Result " + n + " Type " + choice + ".json");
 		FileWriter fw = new FileWriter(output, true);
 		PrintWriter pw = new PrintWriter(new BufferedWriter(fw), true);
 
@@ -58,25 +58,7 @@ public class ParallelQuickSortTestResults {
 			result.totalMemoryConsumed = memory / (1024 * 1024);
 
 			long begin = 0, end = 0;
-			try{
-				begin = System.currentTimeMillis();
-				ParallelQuickSort.sort(data);
-				end = System.currentTimeMillis();
-			} catch(OutOfMemoryError e) {
-				result.ranOutOfMemoryDueToParallelQuickSort = true;
-			}
-
-			long diff = end - begin;
-			long time1 = diff;
-
-			result.parallelQuickSortTotalTime = diff;
-			//result.isParallelQuickSortSorted = isSorted(data);
-
 			runtime.gc();
-
-			for (int i = 0; i < n; i++) {
-				data[i] = r.nextInt(n + 1);
-			}
 
 			try {
 				begin = System.currentTimeMillis();
@@ -86,15 +68,10 @@ public class ParallelQuickSortTestResults {
 					Arrays.parallelSort(data);
 				end = System.currentTimeMillis();
 			} catch (OutOfMemoryError e) {
-				result.ranOutOfMemoryDueToArraysParallelSort = true;
+				
 			}
-
-			diff = end - begin;
-			long time2 = diff;
-
+			long diff = end - begin;
 			result.arraySortTotalTime = diff;
-			result.gainInMilliseconds = time2 - time1;
-			result.percentageGain = ((time2 - time1) / (double) time1) * 100;
 			
 			pw.append(gson.toJson(result));
 			pw.println();
@@ -117,14 +94,8 @@ public class ParallelQuickSortTestResults {
 	public static class Result {
 		public int arraySize;
 		public int sortType = 1;
-		public long parallelQuickSortTotalTime;
 		public long arraySortTotalTime;
 		public long totalMemoryConsumed;
-		public long gainInMilliseconds;
-		public double percentageGain;
-		public boolean ranOutOfMemoryDueToParallelQuickSort;
-		public boolean ranOutOfMemoryDueToArraysParallelSort;
-		//public boolean isParallelQuickSortSorted = false;
 	}
 
 }
