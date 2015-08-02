@@ -24,7 +24,7 @@ public class ParallelQuickSort {
 			return;
 		}
 		
-		THRESHOLD = data.length / NO_OF_THREADS;
+		THRESHOLD = (NO_OF_THREADS > 1) ? (1 + data.length / (NO_OF_THREADS << 3)) : data.length;
 		counter.set(1);
 		executor = Executors.newCachedThreadPool();
 		
@@ -47,9 +47,6 @@ public class ParallelQuickSort {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		//System.gc();
-		THRESHOLD = 1000000;
 	}
 	
 	private static Runnable quickSortCallable(int low, int high, int data[]) {
