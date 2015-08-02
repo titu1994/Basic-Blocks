@@ -45,7 +45,7 @@ public class ParallelQuickSortTest {
 		
 		long diff = end - begin;
 		long time1 = diff;
-		//System.out.println("Is Sorted : " + isSorted(data));
+		System.out.println("Is Sorted : " + isSorted(data));
 		memory = runtime.totalMemory() - runtime.freeMemory();
 		System.out.println("Memory in MB Consumed After execution: " + (memory / (1024 * 1024)));
 		System.out.println("ParallelQuickSort.sort() Millitime : " + diff);

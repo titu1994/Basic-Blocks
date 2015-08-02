@@ -43,7 +43,6 @@ public class ParallelQuickSortTestResults {
 		File output = new File("Result " + n + " Type " + choice + ".json");
 		FileWriter fw = new FileWriter(output, true);
 		PrintWriter pw = new PrintWriter(new BufferedWriter(fw), true);
-
 		for(int x = 0; x < setSize; x++) {
 			Result result = new Result();
 			result.arraySize = n;
@@ -102,7 +101,7 @@ public class ParallelQuickSortTestResults {
 		}
 		
 		pw.close();
-		System.out.println("Results have been written.");
+		System.out.println("\nResults have been written.");
 	}
 
 	private static boolean isSorted(int data[]) {
