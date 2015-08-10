@@ -19,7 +19,7 @@ import java.util.Arrays;
 import com.somshubra.files.FileServer.SyncHeader;
 
 public class FileClient {
-	private static final int BUFFER_CAPACITY = 1024 * 100;
+	private static final int BUFFER_CAPACITY = 1024 * 128;
 	private static Socket client;
 
 	public static void main(String args[]) throws IOException {
@@ -28,7 +28,6 @@ public class FileClient {
 	}
 
 	private static void receive() {
-		
 		try {
 			PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(client.getOutputStream())), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -62,24 +61,14 @@ public class FileClient {
 			FileOutputStream fos = new FileOutputStream(f);
 			FileChannel fc = fos.getChannel();
 			
-			ByteBuffer fileBufferArray[] = new ByteBuffer[10];
+			ByteBuffer fileBufferArray = ByteBuffer.allocate(BUFFER_CAPACITY);
 			String fileStore = "";
-			int bufferNo = 0;
-			
 			long size = 0;
 			
 			while(!(fileStore = in.readLine()).equals(FileServer.FILE_TRANSFERED)) {
-				if(bufferNo == 10) {
-					fc.write(fileBufferArray);
-					bufferNo = 0;
-				}
-				fileBufferArray[bufferNo] = ByteBuffer.wrap(fileStore.getBytes());
-				bufferNo++;
-			}
-			
-			for(ByteBuffer b : fileBufferArray) {
-				if(b.remaining() != 0)
-					fc.write(b);
+				fileBufferArray.put(fileStore.getBytes(), 0, fileStore.length());
+				fc.write(fileBufferArray);
+				fileBufferArray.clear();
 			}
 			
 			System.out.println("File Transfer Completed");
@@ -88,11 +77,8 @@ public class FileClient {
 			fc.close();
 			fos.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 	}
 
 }

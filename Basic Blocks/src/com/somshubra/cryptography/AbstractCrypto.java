@@ -17,15 +17,18 @@ public abstract class AbstractCrypto {
 		encryptMap = new HashMap<String, Integer>();
 		decryptMap = new HashMap<Integer, String>();
 		random = new Random();
+		
+		loadEncryptMap();
+		loadDecryptMap();
 	}
 
 	protected abstract void loadEncryptMap();
 	
-	protected void addEncryptMapKeyValPair(String key) {
-		encryptMap.put(key, getNextRandom());
+	protected void addEncryptMapKeyValPair(char key) {
+		encryptMap.put(key + "", getNextRandom());
 	}
 
-	protected void loadDecryptMap() {
+	private void loadDecryptMap() {
 		if(encryptMap != null && decryptMap != null) {
 			Set<Entry<String, Integer>> set = encryptMap.entrySet();
 			for(Entry<String, Integer> entry : set) {
@@ -39,7 +42,7 @@ public abstract class AbstractCrypto {
 		int mappedVal = 0;
 
 		for(int i = 0; i < input.length(); i++) {
-			mappedVal = encryptMap.get(input.charAt(i));
+			mappedVal = encryptMap.get(input.charAt(i) + "");
 
 			if(mappedVal >= 0 && mappedVal <= 9) {
 				output.append("00" + mappedVal);
@@ -72,7 +75,7 @@ public abstract class AbstractCrypto {
 				mappedVal = decryptMap.get(Integer.parseInt(buffer.charAt(1) + "" + buffer.charAt(2)));
 			}
 			else {
-				mappedVal = decryptMap.get(Integer.parseInt("" + buffer.charAt(0) + buffer.charAt(1) + buffer.charAt(2)));
+				mappedVal = decryptMap.get(Integer.parseInt("" + buffer.charAt(0) + "" + buffer.charAt(1) + "" + buffer.charAt(2)));
 			}
 			
 			output.append(mappedVal);
@@ -82,8 +85,8 @@ public abstract class AbstractCrypto {
 	}
 	
 	protected int getNextRandom() {
-		int rand = 0;
-		while(rand >= MIN_SET_VAL && rand <= MAX_SET_VAL && !encryptMap.containsValue(rand)) {
+		int rand = random.nextInt(MAX_SET_VAL - MIN_SET_VAL + 1) + MIN_SET_VAL;
+		while(rand >= MIN_SET_VAL && rand <= MAX_SET_VAL && encryptMap.containsValue(rand)) {
 			rand = random.nextInt(MAX_SET_VAL - MIN_SET_VAL + 1) + MIN_SET_VAL;
 		}
 		

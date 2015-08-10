@@ -34,14 +34,12 @@ public class FileServer {
 				handler.start();
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		try {
 			server.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -76,7 +74,6 @@ public class FileServer {
 				header.canRead = f.canRead();
 				header.canWrite = f.canWrite();
 				
-				
 				out.println(header);
 				
 				String response = in.readLine();
@@ -85,10 +82,9 @@ public class FileServer {
 				ByteBuffer fileBuffer = ByteBuffer.allocate(header.clientBufferSize);
 				
 				int fileCount = 0;
-				String temp = "";
+				
 				while((fileCount = fc.read(fileBuffer)) != -1) {
-					temp = new String(fileBuffer.array());
-					out.println(temp);
+					out.println(fileBuffer.array());
 					fileBuffer.clear();
 				}
 				
