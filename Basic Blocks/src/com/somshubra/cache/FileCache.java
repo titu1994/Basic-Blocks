@@ -17,10 +17,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * File Cache 
+ * Note: Doesnt work perfectly yet
+ * @author Yue
+ *
+ */
 public class FileCache {
 
 	private String fileCacheName;
-	private long cacheSize = 4096;
+	private static long cacheSize = 4096;
 
 	private int bytePointer;
 	private byte[] cache;
@@ -33,7 +39,7 @@ public class FileCache {
 
 	public FileCache(String cacheName, int cacheSize) {
 		this.fileCacheName = cacheName;
-		this.cacheSize = cacheSize;
+		FileCache.cacheSize = cacheSize;
 
 		cache = new byte[cacheSize];
 		fileManager = new FileManager(cacheName, cacheSize);
@@ -42,13 +48,25 @@ public class FileCache {
 	public void storeBytes(byte... data) {
 		if (data.length > cacheSize)
 			throw new UnsupportedOperationException(
-					"Input data array cannot have size greater than cache size");
+					"Input data array cannot have size greater than cache size. Convert to fragments first!");
 
 		int dataSize = data.length;
-		if (bytePointer + dataSize < cacheSize) {
+		if (bytePointer + dataSize <= cacheSize) {
 			System.arraycopy(data, 0, cache, bytePointer, dataSize);
 			bytePointer += dataSize;
+
+			// Handle buffer filled
+			if (bytePointer == cacheSize) {
+				System.out.println("Invalidating cache");
+				
+				fileManager.addCache();
+				fileManager.saveToCache(cache);
+				bytePointer = 0;
+				fileManager.addCache();
+			}
+
 		} else {
+			System.out.println("Invalidating cache");
 			fileManager.saveToCache(cache);
 			bytePointer = 0;
 
@@ -64,10 +82,36 @@ public class FileCache {
 		return cache;
 	}
 
+	public void releaseFileCache() {
+		fileManager.deleteFileCache();
+	}
+
+	public void close() {
+		fileManager.closeFiles();
+	}
+
 	@Override
 	protected void finalize() throws Throwable {
 		fileManager.closeFiles();
 		super.finalize();
+	}
+
+	public long getCacheSize() {
+		return cacheSize;
+	}
+
+	public static byte[][] splitByteArrayToCacheFrames(byte[] data) {
+		byte[][] splits = null;
+		int n = (int) Math.ceil(data.length / (double) cacheSize);
+
+		splits = new byte[n][(int) cacheSize];
+
+		for (int remainder = data.length, i = 0, offset = 0; remainder > 0; remainder -= cacheSize, i++, offset += cacheSize) {
+			System.arraycopy(data, offset, splits[i], 0,
+					(int) (remainder > cacheSize ? cacheSize : remainder));
+		}
+
+		return splits;
 	}
 
 	private static class FileManager {
@@ -95,33 +139,61 @@ public class FileCache {
 			cacheFile = new File(fcName + filetype);
 			metaFile = new File(fcName + metafiletype);
 
-			try {
-				cacheWriter = new BufferedOutputStream(new FileOutputStream(
-						cacheFile, true));
-				metaWriter = new PrintWriter(new BufferedWriter(new FileWriter(
-						metaFile, true)), true);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			// Add meta info about filename and cachesize
+			// Add meta info about filename and cache size
 			try {
 				metaLines = new ArrayList<>(Files.readAllLines(metaFile
 						.toPath()));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 
+			if(metaLines == null)
+				metaLines = new ArrayList<>();
+
 			if (metaLines.isEmpty()) {
-				metaWriter.println(fcName);
-				metaWriter.println(cSize + "");
+				loadFileReaderWriter(fcName, cSize);
 
 				metaLines.add(fcName);
 				metaLines.add(cSize + "");
+			} else {
+				int buffersize = Integer.parseInt(metaLines.get(1));
+				if (cSize != buffersize) {
+					loadFileReaderWriter(fcName, cSize);
+
+					metaLines.clear();
+					metaLines.add(fcName);
+					metaLines.add(cSize + "");
+					
+				} else {
+					try {
+						cacheWriter = new BufferedOutputStream(
+								new FileOutputStream(cacheFile, true));
+						metaWriter = new PrintWriter(new BufferedWriter(new FileWriter(
+								metaFile, true)), true);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					setNo = Integer.parseInt(metaLines.get(metaLines.size() - 1).split(" ")[0]);
+				}
 			}
 
 			executor = Executors.newCachedThreadPool();
+		}
+
+		private void loadFileReaderWriter(String fcName, long cSize) {
+			try {
+				cacheWriter = new BufferedOutputStream(new FileOutputStream(
+						cacheFile, false));
+				metaWriter = new PrintWriter(new BufferedWriter(new FileWriter(
+						metaFile, false)), true);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			metaWriter.println(fcName);
+			metaWriter.println(cSize + "");
 		}
 
 		public void saveToCache(byte[] cache) {
@@ -141,7 +213,7 @@ public class FileCache {
 			setNo++;
 		}
 
-		private void cacheToFile(byte[] cache) {
+		private synchronized void cacheToFile(byte[] cache) {
 			// Add meta info about set number and the hash value for that set
 			long hash = byteHash(cache);
 			metaLines.add(setNo + " " + hash);
@@ -151,24 +223,30 @@ public class FileCache {
 			try {
 				cacheWriter.write(cache, 0, cache.length);
 				cacheWriter.flush();
+				System.out.println("Finished invalidating cache.");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		private byte[] fileToCache(int cachenumber) {
+		private synchronized byte[] fileToCache(int cachenumber) {
 			byte[] data = new byte[(int) cSize];
 			try {
 				BufferedInputStream bis = new BufferedInputStream(
-						new FileInputStream(cacheFile));
-				bis.read(data, ((int) cSize) * cachenumber, (int) cSize);
-				long hash = byteHash(data);
-
+						new FileInputStream(cacheFile), (int) cSize);
 				String hashline = metaLines.get(cachenumber + META_OFFSET);
 				long h = Long.parseLong(hashline.split(" ")[1]);
+				
+				System.out.println(bis.markSupported());
+				bis.mark(((int) cSize) * cachenumber);
+				bis.read(data);
+				long hash = byteHash(data);
 
+				System.out.println("Finished loading cache.");
 				if (h == hash)
 					return data;
+				else
+					return null;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -191,19 +269,40 @@ public class FileCache {
 				cacheWriter.flush();
 				cacheWriter.close();
 			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			metaWriter.flush();
-			metaWriter.close();
 
+			}
+			
+			try {
+				metaWriter.flush();
+				metaWriter.close();
+			}
+			catch(Exception e) {}
+			
 			executor.shutdown();
 			try {
 				executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 
+			metaLines.clear();
+
 			System.out.println("Cache and metadata file closed");
+		}
+
+		public void deleteFileCache() {
+			if (cacheFile != null)
+				cacheFile.delete();
+			else {
+				cacheFile = new File(fcName + filetype);
+				cacheFile.delete();
+			}
+
+			if (metaFile != null)
+				metaFile.delete();
+			else {
+				metaFile = new File(fcName + metafiletype);
+				metaFile.delete();
+			}
 		}
 
 	}
