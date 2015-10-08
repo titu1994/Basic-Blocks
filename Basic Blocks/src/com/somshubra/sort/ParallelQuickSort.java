@@ -24,7 +24,8 @@ public class ParallelQuickSort {
 			return;
 		}
 		
-		THRESHOLD = (NO_OF_THREADS > 1) ? (1 + data.length / (NO_OF_THREADS << 3)) : data.length;
+		THRESHOLD = (NO_OF_THREADS > 1) ? (1 + data.length / ((NO_OF_THREADS) << 3)) : data.length;
+		//System.out.println("Threshold : " + THRESHOLD);
 		counter.set(1);
 		executor = Executors.newCachedThreadPool();
 		
