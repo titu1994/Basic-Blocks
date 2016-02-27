@@ -1,13 +1,14 @@
 package com.somshubra.sort;
 
 import java.util.Arrays;
-import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ParallelQuickSort {
+
+	private static final int MIN_GRANULARITY = 8192;
 	private static int THRESHOLD = 1000000;
 	private static int NO_OF_THREADS = Runtime.getRuntime().availableProcessors();
 	private static ExecutorService executor;
@@ -19,13 +20,14 @@ public class ParallelQuickSort {
 	}
 
 	public static void sort(int[] data) {
-		if(NO_OF_THREADS == 1) {
+		if(NO_OF_THREADS == 1 || data.length <= MIN_GRANULARITY) {
 			Arrays.sort(data);
 			return;
 		}
-		
-		THRESHOLD = (NO_OF_THREADS > 1) ? (1 + data.length / ((NO_OF_THREADS) << 3)) : data.length;
-		//System.out.println("Threshold : " + THRESHOLD);
+
+		int g;
+		THRESHOLD = (g = (1 + data.length / (NO_OF_THREADS) << 2)) <= MIN_GRANULARITY ?  MIN_GRANULARITY: g;
+
 		counter.set(1);
 		executor = Executors.newCachedThreadPool();
 		
