@@ -26,7 +26,7 @@ public class ParallelQuickSort {
 		}
 
 		int g;
-		THRESHOLD = (g = (1 + data.length / (NO_OF_THREADS) << 2)) <= MIN_GRANULARITY ?  MIN_GRANULARITY: g;
+		THRESHOLD = (g = (data.length / (NO_OF_THREADS) << 2)) <= MIN_GRANULARITY ?  MIN_GRANULARITY: g;
 
 		counter.set(1);
 		executor = Executors.newCachedThreadPool();
