@@ -1,10 +1,10 @@
 package com.somshubra.tests;
 
+import com.somshubra.sort.ParallelQuickSort;
+
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
-
-import com.somshubra.sort.ParallelQuickSort;
 public class ParallelQuickSortTest {
 
 	public static void main(String[] args) {
@@ -56,8 +56,7 @@ public class ParallelQuickSortTest {
 		for(int i = 0; i < n; i++) {
 			data[i] = r.nextInt(n+1);
 		}
-		
-		
+
 		begin = System.currentTimeMillis();
 		Arrays.parallelSort(data);
 		//Arrays.sort(data);
